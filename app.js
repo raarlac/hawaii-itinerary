@@ -18,7 +18,7 @@ function loadItinerary(response){
   const data=rows[0]?.[5]?.toLowerCase()==='event'?rows.slice(1):rows;
   const events=data.map(([date,day,order,time,type,event,details,hotel])=>({date,day,order:Number(order)||0,time,type,event,details,hotel}));
   const grouped=events.reduce((days,event)=>{(days[event.day]??=[]).push(event);return days},{});
-  const icons={"Flight departure":"✈️","Flight arrival":"🛬","Hotel check-in":"🔑","Hotel checkout":"🧳","Transfer":"🚐","Shopping":"🛍️","Lunch & shopping":"🛍️","Show":"🌺","Fireworks":"🎆","Sunset":"🌅","Walk":"🌙","Appointment":"📍","Dinner":"🍽️","Dinner & shopping":"🍽️","Resort time":"🏝️","Activity":"☀️"};
+  const icons={"Flight departure":"✈️","Flight arrival":"🛬","Rental car":"🚗","Drive":"🚙","Hotel check-in":"🔑","Hotel checkout":"🧳","Transfer":"🚐","Shopping":"🛍️","Lunch & shopping":"🛍️","Show":"🌺","Fireworks":"🎆","Sunset":"🌅","Walk":"🌙","Appointment":"📍","Dinner":"🍽️","Dinner & shopping":"🍽️","Resort time":"🏝️","Activity":"☀️"};
   daysRoot.innerHTML=Object.entries(grouped).sort((a,b)=>Number(a[0].match(/\d+/)?.[0])-Number(b[0].match(/\d+/)?.[0])).map(([day,dayEvents])=>{
     dayEvents.sort((a,b)=>a.order-b.order);
     const info=dayEvents[0];
