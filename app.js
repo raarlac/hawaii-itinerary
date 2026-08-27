@@ -16,13 +16,12 @@ function loadItinerary(response){
   if(!response||response.status==='error'){daysRoot.innerHTML='<p class="error">Could not load the itinerary.</p>';return}
   const rows=response.table.rows.map(row=>row.c.map(cellText));
   const data=rows[0]?.[5]?.toLowerCase()==='event'?rows.slice(1):rows;
-  const events=data.map(([date,day,order,time,type,event,details,hotel])=>({date,day,order:Number(order)||0,time,type,event,details,hotel}));
+  const events=data.map(([date,day,order,time,emoji,event,details,hotel])=>({date,day,order:Number(order)||0,time,emoji,event,details,hotel}));
   const grouped=events.reduce((days,event)=>{(days[event.day]??=[]).push(event);return days},{});
-  const icons={"Flight departure":"✈️","Flight arrival":"🛬","Rental car":"🚗","Drive":"🚙","Hotel check-in":"🔑","Hotel checkout":"🧳","Transfer":"🚐","Shopping":"🛍️","Lunch & shopping":"🛍️","Show":"🌺","Fireworks":"🎆","Sunset":"🌅","Walk":"🌙","Appointment":"📍","Dinner":"🍽️","Dinner & shopping":"🍽️","Resort time":"🏝️","Activity":"☀️"};
   daysRoot.innerHTML=Object.entries(grouped).sort((a,b)=>Number(a[0].match(/\d+/)?.[0])-Number(b[0].match(/\d+/)?.[0])).map(([day,dayEvents])=>{
     dayEvents.sort((a,b)=>a.order-b.order);
     const info=dayEvents[0];
-    const bubbles=dayEvents.filter(item=>item.event).map(item=>`<div class="event-bubble"><div class="bubble-picture" data-type="${esc(item.type)}" aria-hidden="true"><span>${icons[item.type]||'•'}</span></div><div class="bubble-copy"><div class="bubble-topline"><time>${esc(item.time)}</time><span class="bubble-type">${esc(item.type)}</span></div><h4>${esc(item.event)}</h4>${item.details?`<p>${esc(item.details)}</p>`:''}</div></div>`).join('');
+    const bubbles=dayEvents.filter(item=>item.event).map(item=>`<div class="event-bubble"><div class="bubble-picture" data-emoji="${esc(item.emoji)}" aria-hidden="true"><span>${esc(item.emoji)||'📌'}</span></div><div class="bubble-copy"><div class="bubble-topline"><time>${esc(item.time)}</time></div><h4>${esc(item.event)}</h4>${item.details?`<p>${esc(item.details)}</p>`:''}</div></div>`).join('');
     return `<article class="day"><header><p class="day-number">${esc(day)}</p><h3 class="day-date">${esc(info.date)}</h3>${info.hotel?`<p class="day-hotel">🏨 ${esc(info.hotel)}</p>`:''}</header><div class="chronological-list">${bubbles||'<p class="no-events">No scheduled events yet.</p>'}</div></article>`;
   }).join('');
 }
