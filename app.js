@@ -2,6 +2,8 @@ const daysRoot=document.querySelector('#days');
 const foodRoot=document.querySelector('#food-list');
 const cellText=cell=>cell&&(cell.f??cell.v)!=null?String(cell.f??cell.v):'';
 const esc=value=>String(value).replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+const foodStorageKey='hawaii-itinerary-tried-foods';
+const savedFoods=()=>{try{return JSON.parse(localStorage.getItem(foodStorageKey)||'{}')}catch{return {}}};
 
 document.querySelectorAll('.view-tab').forEach(button=>button.addEventListener('click',()=>{
   const view=button.dataset.view;
@@ -21,8 +23,23 @@ function loadFood(response){
   if(!response||response.status==='error'){foodRoot.innerHTML='<p class="error">Could not load the food list.</p>';return}
   const rows=response.table.rows.map(row=>row.c.map(cellText));
   const foods=rows[0]?.[1]?.toLowerCase()==='dish'?rows.slice(1):rows;
-  foodRoot.innerHTML=foods.filter(row=>row[1]).map(([category,dish,place,area,notes,tried])=>`<article class="food-card">${String(tried).toUpperCase()==='TRUE'?'<span class="tried-badge">Tried ✓</span>':''}<p class="food-category">${esc(category)}</p><h3>${esc(dish)}</h3>${place||area?`<p class="food-meta">${esc([place,area].filter(Boolean).join(' · '))}</p>`:''}${notes?`<p class="food-notes">${esc(notes)}</p>`:''}</article>`).join('');
+  const saved=savedFoods();
+  foodRoot.innerHTML=foods.filter(row=>row[1]).map(([category,dish,place,area,notes,tried])=>{const id=[category,dish,place,area].join('|').toLowerCase();const checked=id in saved?saved[id]:String(tried).toUpperCase()==='TRUE';return `<article class="food-card ${checked?'is-tried':''}" data-food-id="${esc(id)}"><button class="tried-toggle" type="button" aria-pressed="${checked}" aria-label="Mark ${esc(dish)} as ${checked?'not tried':'tried'}"><span aria-hidden="true">${checked?'✓':''}</span>${checked?'Tried':'Try it'}</button><p class="food-category">${esc(category)}</p><h3>${esc(dish)}</h3>${place||area?`<p class="food-meta">${esc([place,area].filter(Boolean).join(' · '))}</p>`:''}${notes?`<p class="food-notes">${esc(notes)}</p>`:''}</article>`}).join('');
 }
+
+foodRoot.addEventListener('click',event=>{
+  const button=event.target.closest('.tried-toggle');
+  if(!button)return;
+  const card=button.closest('.food-card');
+  const checked=button.getAttribute('aria-pressed')!=='true';
+  const saved=savedFoods();
+  saved[card.dataset.foodId]=checked;
+  localStorage.setItem(foodStorageKey,JSON.stringify(saved));
+  card.classList.toggle('is-tried',checked);
+  button.setAttribute('aria-pressed',checked);
+  button.setAttribute('aria-label',`Mark ${card.querySelector('h3').textContent} as ${checked?'not tried':'tried'}`);
+  button.innerHTML=`<span aria-hidden="true">${checked?'✓':''}</span>${checked?'Tried':'Try it'}`;
+});
 
 window.loadItinerary=loadItinerary;
 window.loadFood=loadFood;
