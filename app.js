@@ -17,14 +17,14 @@ function loadItinerary(response){
   const rows=response.table.rows.map(row=>row.c.map(cellText));
   const dates=rows[0].slice(1),labels=rows[1].slice(1),categories=rows.slice(2).map(row=>({label:row[0],values:row.slice(1)}));
   daysRoot.innerHTML=dates.map((date,index)=>{
-    const items=categories.map(category=>({label:category.label,value:category.values[index]})).filter(item=>item.value);
+    const items=categories.map(category=>({label:category.label,value:category.values[index]})).filter(item=>item.value&&item.value.trim().toLowerCase()!=='open');
     const hotel=items.find(item=>/Hotel/i.test(item.label));
     const travel=items.find(item=>/Travel/i.test(item.label));
     const hotelLines=(hotel?.value||'').split('\n').filter(Boolean);
     const hotelName=hotelLines.map(line=>line.replace(/^→\s*/, '').replace(/\s*(check-?in|check-?out).*$/i,'').trim()).filter(Boolean).join(' → ');
     const slots={Morning:[],Afternoon:[],Evening:[]};
     const slotFor=text=>{const match=text.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);if(!match)return'Afternoon';let hour=Number(match[1])%12;if(match[3].toUpperCase()==='PM')hour+=12;return hour<12?'Morning':hour<17?'Afternoon':'Evening'};
-    items.filter(item=>/Morning|Afternoon|Evening/i.test(item.label)).forEach(item=>{const slot=Object.keys(slots).find(name=>item.label.includes(name));if(slot)slots[slot].push({type:item.value==='Open'?'Open time':'Activity',icon:item.value==='Open'?'○':'🌴',value:item.value})});
+    items.filter(item=>/Morning|Afternoon|Evening/i.test(item.label)).forEach(item=>{const slot=Object.keys(slots).find(name=>item.label.includes(name));if(slot)slots[slot].push({type:'Activity',icon:'🌴',value:item.value})});
     hotelLines.filter(line=>/check-?in|check-?out/i.test(line)).forEach(line=>{const checkout=/check-?out/i.test(line);slots[checkout?'Morning':slotFor(line)].push({type:checkout?'Hotel checkout':'Hotel check-in',icon:checkout?'🧳':'🔑',value:line})});
     if(travel){const lines=travel.value.split('\n').filter(Boolean);const departure=lines.find(line=>/Depart/i.test(line));const arrival=lines.find(line=>/Arrive/i.test(line));if(departure&&arrival){const flightMeta=lines.filter(line=>line!==departure&&line!==arrival).join(' · ');const departureSlot=slotFor(departure);slots[departureSlot].push({type:'Flight departure',icon:'✈️',value:departure,meta:flightMeta});slots[/next day/i.test(arrival)?departureSlot:slotFor(arrival)].push({type:/next day/i.test(arrival)?'Arrival · next day':'Flight arrival',icon:'🛬',value:arrival})}else{slots[slotFor(travel.value)].push({type:/transfer/i.test(travel.value)?'Transfer':'Travel',icon:'🚐',value:travel.value})}}
     const renderSlot=name=>`<section class="time-slot"><p class="slot-label">${name}</p><div class="bubble-stack">${slots[name].map(item=>`<div class="event-bubble ${item.value==='Open'?'is-open':''}"><div class="bubble-icon" aria-hidden="true">${item.icon}</div><div><span class="bubble-type">${item.type}</span><p>${esc(item.value)}</p>${item.meta?`<small>${esc(item.meta)}</small>`:''}</div></div>`).join('')}</div></section>`;
