@@ -17,28 +17,28 @@
 </head>
 <body>
   <header class="hero">
-    <p class="brand">Hawaii</p>
+    <p class="brand" data-i18n="brand">Hawaii</p>
     <h1>Sep 2–8</h1>
     <p>Oʻahu · Waikīkī + Ko Olina</p>
   </header>
   <main>
     <div class="view-tabs" role="tablist" aria-label="Trip views">
-      <button class="view-tab is-active" role="tab" aria-selected="true" aria-controls="itinerary-panel" data-view="itinerary">Itinerary</button>
-      <button class="view-tab" role="tab" aria-selected="false" aria-controls="food-panel" data-view="food">Things to eat</button>
+      <button class="view-tab is-active" role="tab" aria-selected="true" aria-controls="itinerary-panel" data-view="itinerary" data-i18n="itinerary">Itinerary</button>
+      <button class="view-tab" role="tab" aria-selected="false" aria-controls="food-panel" data-view="food" data-i18n="food">Things to eat</button>
     </div>
     <section class="view-panel" id="itinerary-panel" role="tabpanel">
-      <div class="section-heading"><h2>The island plan</h2></div>
+      <div class="section-heading"><h2 data-i18n="plan">The island plan</h2></div>
       <div class="days" id="days" aria-live="polite"></div>
     </section>
     <section class="view-panel" id="food-panel" role="tabpanel" hidden>
-      <div class="section-heading"><h2>Things to eat</h2></div>
+      <div class="section-heading"><h2 data-i18n="food">Things to eat</h2></div>
       <div class="food-grid" id="food-list" aria-live="polite"></div>
     </section>
-    <noscript><p class="error">JavaScript is required to load the live trip data.</p></noscript>
+    <noscript><p class="error">JavaScript is required to load the trip data.</p></noscript>
   </main>
-  <footer>Made for island days 🌺</footer>
+  <footer data-i18n="footer">Made for island days 🌺</footer>
   <script src="app.js"></script>
-  <script src="https://docs.google.com/spreadsheets/d/1-h-J9AFpZmi6FRT78hTkok_Q2pJ6WhjNqINpcXrZY_8/gviz/tq?tqx=responseHandler:loadItinerary&amp;sheet=Timeline&amp;range=A1:J200"></script>
-  <script src="https://docs.google.com/spreadsheets/d/1-h-J9AFpZmi6FRT78hTkok_Q2pJ6WhjNqINpcXrZY_8/gviz/tq?tqx=responseHandler:loadFood&amp;sheet=Food&amp;range=A1:F100"></script>
+  <script src="https://docs.google.com/spreadsheets/d/1-h-J9AFpZmi6FRT78hTkok_Q2pJ6WhjNqINpcXrZY_8/gviz/tq?tqx=responseHandler:loadItinerary&amp;sheet=Timeline&amp;range=A1:N200"></script>
+  <script src="https://docs.google.com/spreadsheets/d/1-h-J9AFpZmi6FRT78hTkok_Q2pJ6WhjNqINpcXrZY_8/gviz/tq?tqx=responseHandler:loadFood&amp;sheet=Food&amp;range=A1:K100"></script>
 </body>
 </html>
