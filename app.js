@@ -16,13 +16,18 @@ function loadItinerary(response){
   if(!response||response.status==='error'){daysRoot.innerHTML='<p class="error">Could not load the itinerary.</p>';return}
   const rows=response.table.rows.map(row=>row.c.map(cellText));
   const dates=rows[0].slice(1),labels=rows[1].slice(1),categories=rows.slice(2).map(row=>({label:row[0],values:row.slice(1)}));
-  const isLogistics=label=>/Hotel|Travel/i.test(label);
   daysRoot.innerHTML=dates.map((date,index)=>{
     const items=categories.map(category=>({label:category.label,value:category.values[index]})).filter(item=>item.value);
-    const timeline=items.filter(item=>!isLogistics(item.label));
-    const logistics=items.filter(item=>isLogistics(item.label));
-    const renderItem=item=>`<div class="event ${item.value==='Open'?'is-open':''}"><p class="event-label">${esc(item.label)}</p><p class="event-text">${esc(item.value)}</p></div>`;
-    return `<article class="day"><header><p class="day-number">${esc(labels[index]||`Day ${index+1}`)}</p><h3 class="day-date">${esc(date)}</h3></header><div class="day-content"><div class="timeline"><p class="group-label">Day timeline</p><div class="events">${timeline.map(renderItem).join('')}</div></div>${logistics.length?`<aside class="logistics"><p class="group-label">Stay & travel</p>${logistics.map(renderItem).join('')}</aside>`:''}</div></article>`;
+    const hotel=items.find(item=>/Hotel/i.test(item.label));
+    const travel=items.find(item=>/Travel/i.test(item.label));
+    const hotelLines=(hotel?.value||'').split('\n').filter(Boolean);
+    const hotelName=hotelLines.map(line=>line.replace(/^→\s*/, '').replace(/\s*(check-?in|check-?out).*$/i,'').trim()).filter(Boolean).join(' → ');
+    const slots={Morning:[],Afternoon:[],Evening:[]};
+    items.filter(item=>/Morning|Afternoon|Evening/i.test(item.label)).forEach(item=>{const slot=Object.keys(slots).find(name=>item.label.includes(name));if(slot)slots[slot].push({type:'Plan',value:item.value})});
+    hotelLines.filter(line=>/check-?in|check-?out/i.test(line)).forEach(line=>slots[/check-?out/i.test(line)?'Morning':'Afternoon'].push({type:'Hotel',value:line}));
+    if(travel){const match=travel.value.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);let slot='Afternoon';if(match){let hour=Number(match[1])%12;if(match[3].toUpperCase()==='PM')hour+=12;slot=hour<12?'Morning':hour<17?'Afternoon':'Evening'}slots[slot].push({type:'Travel',value:travel.value})}
+    const renderSlot=name=>`<section class="time-slot"><p class="slot-label">${name}</p>${slots[name].map(item=>`<div class="slot-item ${item.value==='Open'?'is-open':''}"><span>${item.type}</span><p>${esc(item.value)}</p></div>`).join('')}</section>`;
+    return `<article class="day"><header><p class="day-number">${esc(labels[index]||`Day ${index+1}`)}</p><h3 class="day-date">${esc(date)}</h3>${hotelName?`<p class="day-hotel">🏨 ${esc(hotelName)}</p>`:''}</header><div class="day-content">${Object.keys(slots).map(renderSlot).join('')}</div></article>`;
   }).join('');
 }
 
