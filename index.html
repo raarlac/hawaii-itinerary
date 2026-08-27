@@ -1,5 +1,39 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A live Hawaii itinerary for Waikīkī and Ko Olina."><title>Hawaii Itinerary</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css"></head>
-<body><header class="hero" id="top"><nav><a class="brand" href="#top">Hawaii Itinerary</a><a href="#plan">The plan</a></nav><div class="hero-copy"><p class="eyebrow">Oʻahu · Sep 2–8</p><h1>Seven days of aloha.</h1><p class="intro">Waikīkī energy, Ko Olina sunsets, and an island week with room to wander.</p><a class="button" href="#plan">Explore the itinerary</a></div></header>
-<main><section class="overview" aria-label="Trip overview"><div><strong>7</strong><span>days</span></div><div><strong>2</strong><span>home bases</span></div><div><strong>1</strong><span>island</span></div></section><section class="itinerary" id="plan"><div class="section-heading"><div><p class="eyebrow">Live from the trip sheet</p><h2>The island plan</h2></div><p class="sync" id="sync-status" role="status">Loading the latest itinerary…</p></div><div class="days" id="days" aria-live="polite"></div><noscript><p class="error">JavaScript is required to load the live itinerary.</p></noscript></section></main>
-<footer><p>Made for island days <span aria-hidden="true">🌺</span></p></footer><script src="app.js"></script><script src="https://docs.google.com/spreadsheets/d/1-h-J9AFpZmi6FRT78hTkok_Q2pJ6WhjNqINpcXrZY_8/gviz/tq?tqx=responseHandler:loadItinerary&amp;sheet=Itinerary&amp;range=A1:H7"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="A live Hawaii itinerary for Waikīkī and Ko Olina.">
+  <title>Hawaii Itinerary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <p class="brand">Hawaii</p>
+    <h1>Sep 2–8</h1>
+    <p>Oʻahu · Waikīkī + Ko Olina</p>
+  </header>
+  <main>
+    <div class="view-tabs" role="tablist" aria-label="Trip views">
+      <button class="view-tab is-active" role="tab" aria-selected="true" aria-controls="itinerary-panel" data-view="itinerary">Itinerary</button>
+      <button class="view-tab" role="tab" aria-selected="false" aria-controls="food-panel" data-view="food">Things to eat</button>
+    </div>
+    <section class="view-panel" id="itinerary-panel" role="tabpanel">
+      <div class="section-heading"><h2>The island plan</h2><p class="sync" id="sync-status" role="status">Loading…</p></div>
+      <div class="days" id="days" aria-live="polite"></div>
+    </section>
+    <section class="view-panel" id="food-panel" role="tabpanel" hidden>
+      <div class="section-heading"><h2>Things to eat</h2><p class="sync" id="food-sync-status" role="status">Loading…</p></div>
+      <div class="food-grid" id="food-list" aria-live="polite"></div>
+    </section>
+    <noscript><p class="error">JavaScript is required to load the live trip data.</p></noscript>
+  </main>
+  <footer>Made for island days 🌺</footer>
+  <script src="app.js"></script>
+  <script src="https://docs.google.com/spreadsheets/d/1-h-J9AFpZmi6FRT78hTkok_Q2pJ6WhjNqINpcXrZY_8/gviz/tq?tqx=responseHandler:loadItinerary&amp;sheet=Itinerary&amp;range=A1:H7"></script>
+  <script src="https://docs.google.com/spreadsheets/d/1-h-J9AFpZmi6FRT78hTkok_Q2pJ6WhjNqINpcXrZY_8/gviz/tq?tqx=responseHandler:loadFood&amp;sheet=Food&amp;range=A1:F100"></script>
+</body>
+</html>
