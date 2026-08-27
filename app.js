@@ -16,7 +16,14 @@ function loadItinerary(response){
   if(!response||response.status==='error'){daysRoot.innerHTML='<p class="error">Could not load the itinerary.</p>';return}
   const rows=response.table.rows.map(row=>row.c.map(cellText));
   const dates=rows[0].slice(1),labels=rows[1].slice(1),categories=rows.slice(2).map(row=>({label:row[0],values:row.slice(1)}));
-  daysRoot.innerHTML=dates.map((date,index)=>`<article class="day"><header><p class="day-number">${esc(labels[index]||`Day ${index+1}`)}</p><h3 class="day-date">${esc(date)}</h3></header><div class="events">${categories.map(category=>({label:category.label,value:category.values[index]})).filter(item=>item.value).map(item=>`<div class="event ${item.value==='Open'?'is-open':''}"><p class="event-label">${esc(item.label)}</p><p class="event-text">${esc(item.value)}</p></div>`).join('')}</div></article>`).join('');
+  const isLogistics=label=>/Hotel|Travel/i.test(label);
+  daysRoot.innerHTML=dates.map((date,index)=>{
+    const items=categories.map(category=>({label:category.label,value:category.values[index]})).filter(item=>item.value);
+    const timeline=items.filter(item=>!isLogistics(item.label));
+    const logistics=items.filter(item=>isLogistics(item.label));
+    const renderItem=item=>`<div class="event ${item.value==='Open'?'is-open':''}"><p class="event-label">${esc(item.label)}</p><p class="event-text">${esc(item.value)}</p></div>`;
+    return `<article class="day"><header><p class="day-number">${esc(labels[index]||`Day ${index+1}`)}</p><h3 class="day-date">${esc(date)}</h3></header><div class="day-content"><div class="timeline"><p class="group-label">Day timeline</p><div class="events">${timeline.map(renderItem).join('')}</div></div>${logistics.length?`<aside class="logistics"><p class="group-label">Stay & travel</p>${logistics.map(renderItem).join('')}</aside>`:''}</div></article>`;
+  }).join('');
 }
 
 function loadFood(response){
