@@ -15,20 +15,15 @@ document.querySelectorAll('.view-tab').forEach(button=>button.addEventListener('
 function loadItinerary(response){
   if(!response||response.status==='error'){daysRoot.innerHTML='<p class="error">Could not load the itinerary.</p>';return}
   const rows=response.table.rows.map(row=>row.c.map(cellText));
-  const dates=rows[0].slice(1),labels=rows[1].slice(1),categories=rows.slice(2).map(row=>({label:row[0],values:row.slice(1)}));
-  daysRoot.innerHTML=dates.map((date,index)=>{
-    const items=categories.map(category=>({label:category.label,value:category.values[index]})).filter(item=>item.value&&item.value.trim().toLowerCase()!=='open');
-    const hotel=items.find(item=>/Hotel/i.test(item.label));
-    const travel=items.find(item=>/Travel/i.test(item.label));
-    const hotelLines=(hotel?.value||'').split('\n').filter(Boolean);
-    const hotelName=hotelLines.map(line=>line.replace(/^→\s*/, '').replace(/\s*(check-?in|check-?out).*$/i,'').trim()).filter(Boolean).join(' → ');
-    const slots={Morning:[],Afternoon:[],Evening:[]};
-    const slotFor=text=>{const match=text.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);if(!match)return'Afternoon';let hour=Number(match[1])%12;if(match[3].toUpperCase()==='PM')hour+=12;return hour<12?'Morning':hour<17?'Afternoon':'Evening'};
-    items.filter(item=>/Morning|Afternoon|Evening/i.test(item.label)).forEach(item=>{const slot=Object.keys(slots).find(name=>item.label.includes(name));if(slot)item.value.split('\n').map(value=>value.trim()).filter(Boolean).forEach(value=>slots[slot].push({type:'Activity',icon:'🌴',value}))});
-    hotelLines.filter(line=>/check-?in|check-?out/i.test(line)).forEach(line=>{const checkout=/check-?out/i.test(line);slots[checkout?'Morning':slotFor(line)].push({type:checkout?'Hotel checkout':'Hotel check-in',icon:checkout?'🧳':'🔑',value:line})});
-    if(travel){const lines=travel.value.split('\n').filter(Boolean);const departure=lines.find(line=>/Depart/i.test(line));const arrival=lines.find(line=>/Arrive/i.test(line));if(departure&&arrival){const flightMeta=lines.filter(line=>line!==departure&&line!==arrival).join(' · ');const departureSlot=slotFor(departure);slots[departureSlot].push({type:'Flight departure',icon:'✈️',value:departure,meta:flightMeta});slots[/next day/i.test(arrival)?departureSlot:slotFor(arrival)].push({type:/next day/i.test(arrival)?'Arrival · next day':'Flight arrival',icon:'🛬',value:arrival})}else{slots[slotFor(travel.value)].push({type:/transfer/i.test(travel.value)?'Transfer':'Travel',icon:'🚐',value:travel.value})}}
-    const renderSlot=name=>`<section class="time-slot"><p class="slot-label">${name}</p><div class="bubble-stack">${slots[name].map(item=>`<div class="event-bubble ${item.value==='Open'?'is-open':''}"><div class="bubble-icon" aria-hidden="true">${item.icon}</div><div><span class="bubble-type">${item.type}</span><p>${esc(item.value)}</p>${item.meta?`<small>${esc(item.meta)}</small>`:''}</div></div>`).join('')}</div></section>`;
-    return `<article class="day"><header><p class="day-number">${esc(labels[index]||`Day ${index+1}`)}</p><h3 class="day-date">${esc(date)}</h3>${hotelName?`<p class="day-hotel">🏨 ${esc(hotelName)}</p>`:''}</header><div class="day-content">${Object.keys(slots).map(renderSlot).join('')}</div></article>`;
+  const data=rows[0]?.[5]?.toLowerCase()==='event'?rows.slice(1):rows;
+  const events=data.map(([date,day,order,time,type,event,details,hotel])=>({date,day,order:Number(order)||0,time,type,event,details,hotel}));
+  const grouped=events.reduce((days,event)=>{(days[event.day]??=[]).push(event);return days},{});
+  const icons={"Flight departure":"✈️","Flight arrival":"🛬","Hotel check-in":"🔑","Hotel checkout":"🧳","Transfer":"🚐","Shopping":"🛍️","Show":"🌺","Fireworks":"🎆","Walk":"🌙","Appointment":"📍","Dinner & shopping":"🍽️","Resort time":"🌴","Activity":"☀️"};
+  daysRoot.innerHTML=Object.entries(grouped).sort((a,b)=>Number(a[0].match(/\d+/)?.[0])-Number(b[0].match(/\d+/)?.[0])).map(([day,dayEvents])=>{
+    dayEvents.sort((a,b)=>a.order-b.order);
+    const info=dayEvents[0];
+    const bubbles=dayEvents.filter(item=>item.event).map(item=>`<div class="event-bubble"><time>${esc(item.time)}</time><div class="bubble-icon" aria-hidden="true">${icons[item.type]||'•'}</div><div class="bubble-copy"><span class="bubble-type">${esc(item.type)}</span><h4>${esc(item.event)}</h4>${item.details?`<p>${esc(item.details)}</p>`:''}</div></div>`).join('');
+    return `<article class="day"><header><p class="day-number">${esc(day)}</p><h3 class="day-date">${esc(info.date)}</h3>${info.hotel?`<p class="day-hotel">🏨 ${esc(info.hotel)}</p>`:''}</header><div class="chronological-list">${bubbles||'<p class="no-events">No scheduled events yet.</p>'}</div></article>`;
   }).join('');
 }
 
