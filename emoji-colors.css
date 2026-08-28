@@ -1,15 +1,16 @@
-.event-bubble{--event-color:#f06f67;--event-tint:#fff1eb;background:linear-gradient(105deg,#fff 0%,#fff 56%,var(--event-tint) 100%);border-color:color-mix(in srgb,var(--event-color) 24%,transparent)}
-.event-bubble:before{background:var(--event-color);box-shadow:0 0 0 2px var(--event-color)}
-.event-bubble .bubble-picture{background:linear-gradient(135deg,color-mix(in srgb,var(--event-color) 58%,white),#fff)}
-.event-bubble .expand-arrow{color:var(--event-color);background:color-mix(in srgb,var(--event-color) 12%,white)}
-.event-bubble[data-emoji="✈️"],.event-bubble[data-emoji="🛬"]{--event-color:#328dcc;--event-tint:#eaf7ff}
-.event-bubble[data-emoji="🚗"],.event-bubble[data-emoji="🚙"],.event-bubble[data-emoji="🚐"]{--event-color:#24a77a;--event-tint:#eafaf3}
-.event-bubble[data-emoji="🔑"],.event-bubble[data-emoji="🧳"]{--event-color:#e49a16;--event-tint:#fff7dd}
-.event-bubble[data-emoji="🍽️"],.event-bubble[data-emoji="🛍️"]{--event-color:#e85b84;--event-tint:#fff0f5}
-.event-bubble[data-emoji="🚶"],.event-bubble[data-emoji="🥾"]{--event-color:#7668cf;--event-tint:#f2efff}
-.event-bubble[data-emoji="🏖️"],.event-bubble[data-emoji="🏝️"],.event-bubble[data-emoji="🌊"],.event-bubble[data-emoji="🤿"]{--event-color:#079caa;--event-tint:#e8fbfa}
-.event-bubble[data-emoji="🌅"],.event-bubble[data-emoji="🎆"]{--event-color:#ee704c;--event-tint:#fff0e9}
-.event-bubble[data-emoji="🎶"],.event-bubble[data-emoji="🦖"]{--event-color:#a65bc7;--event-tint:#f8efff}
-.event-bubble[data-emoji="🌿"],.event-bubble[data-emoji="🍍"]{--event-color:#68a93d;--event-tint:#f2fae9}
-.event-bubble[data-emoji="📸"],.event-bubble[data-emoji="📍"],.event-bubble[data-emoji="⚓"],.event-bubble[data-emoji="⛩️"]{--event-color:#c05d75;--event-tint:#fff1f3}
-.event-bubble[data-emoji="🚿"]{--event-color:#568fc5;--event-tint:#eef7ff}
+.event-bubble{--event-color:#f06f67;background:linear-gradient(112deg,var(--surface) 0%,var(--surface) 54%,color-mix(in srgb,var(--event-color) 10%,var(--mix-bg)) 100%);border-color:color-mix(in srgb,var(--event-color) 22%,var(--line))}
+.event-bubble .bubble-picture{background:linear-gradient(140deg,color-mix(in srgb,var(--event-color) 55%,var(--mix-bg)),color-mix(in srgb,var(--event-color) 12%,var(--mix-bg)))}
+.event-bubble[data-emoji="✈️"],.event-bubble[data-emoji="🛬"]{--event-color:#328dcc}
+.event-bubble[data-emoji="🚗"],.event-bubble[data-emoji="🚙"],.event-bubble[data-emoji="🚐"]{--event-color:#24a77a}
+.event-bubble[data-emoji="🔑"],.event-bubble[data-emoji="🧳"]{--event-color:#e49a16}
+.event-bubble[data-emoji="🍽️"],.event-bubble[data-emoji="🛍️"]{--event-color:#e85b84}
+.event-bubble[data-emoji="🍙"],.event-bubble[data-emoji="🍔"],.event-bubble[data-emoji="🐟"]{--event-color:#e0703c}
+.event-bubble[data-emoji="🍩"],.event-bubble[data-emoji="🍧"],.event-bubble[data-emoji="🍌"]{--event-color:#e8617e}
+.event-bubble[data-emoji="🛒"]{--event-color:#3f9c4f}
+.event-bubble[data-emoji="🚶"],.event-bubble[data-emoji="🥾"]{--event-color:#7668cf}
+.event-bubble[data-emoji="🏖️"],.event-bubble[data-emoji="🏝️"],.event-bubble[data-emoji="🌊"],.event-bubble[data-emoji="🤿"],.event-bubble[data-emoji="🐢"]{--event-color:#079caa}
+.event-bubble[data-emoji="🌅"],.event-bubble[data-emoji="🎆"]{--event-color:#ee704c}
+.event-bubble[data-emoji="🎶"],.event-bubble[data-emoji="🦖"]{--event-color:#a65bc7}
+.event-bubble[data-emoji="🌿"],.event-bubble[data-emoji="🍍"]{--event-color:#68a93d}
+.event-bubble[data-emoji="📸"],.event-bubble[data-emoji="📍"],.event-bubble[data-emoji="⚓"],.event-bubble[data-emoji="⛩️"]{--event-color:#c05d75}
+.event-bubble[data-emoji="🚿"]{--event-color:#568fc5}

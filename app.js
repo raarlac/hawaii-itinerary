@@ -1,7 +1,7 @@
 const daysRoot=document.querySelector('#days');
 const foodRoot=document.querySelector('#food-list');
 const isPt=(navigator.languages||[navigator.language]).some(language=>/^pt(?:-|$)/i.test(language));
-const copy=isPt?{brand:'Hawaii',itinerary:'Roteiro',food:'O que comer',plan:'O roteiro da ilha',footer:'Feito para dias de ilha 🌺',loadItinerary:'Não foi possível carregar o roteiro.',loadFood:'Não foi possível carregar a lista de comidas.',empty:'Nenhum evento programado.',tried:'Já comi',tryIt:'Quero provar',markTried:'Marcar como provado',markNotTried:'Marcar como não provado'}:{brand:'Hawaii',itinerary:'Itinerary',food:'Things to eat',plan:'The island plan',footer:'Made for island days 🌺',loadItinerary:'Could not load the itinerary.',loadFood:'Could not load the food list.',empty:'No scheduled events yet.',tried:'Tried',tryIt:'Try it',markTried:'Mark as tried',markNotTried:'Mark as not tried'};
+const copy=isPt?{brand:'Hawaii',itinerary:'Roteiro',food:'O que comer',plan:'O roteiro da ilha',footer:'Feito para dias de ilha 🌺',loadItinerary:'Não foi possível carregar o roteiro.',loadFood:'Não foi possível carregar a lista de comidas.',empty:'Nenhum evento programado.',tried:'Já comi',tryIt:'Quero provar',markTried:'Marcar como provado',markNotTried:'Marcar como não provado',days:'dias',stops:'paradas',of:'de',triedCount:'provados'}:{brand:'Hawaii',itinerary:'Itinerary',food:'Things to eat',plan:'The island plan',footer:'Made for island days 🌺',loadItinerary:'Could not load the itinerary.',loadFood:'Could not load the food list.',empty:'No scheduled events yet.',tried:'Tried',tryIt:'Try it',markTried:'Mark as tried',markNotTried:'Mark as not tried',days:'days',stops:'stops',of:'of',triedCount:'tried'};
 document.documentElement.lang=isPt?'pt-BR':'en';
 document.title=isPt?'Roteiro do Havaí':'Hawaii Itinerary';
 document.querySelector('meta[name="description"]').content=isPt?'Um roteiro pelo Havaí para Waikīkī e Ko Olina.':'A Hawaii itinerary for Waikīkī and Ko Olina.';
@@ -13,12 +13,24 @@ const esc=value=>String(value).replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;'
 const safeImageUrl=value=>{try{const url=new URL(String(value));return url.protocol==='https:'?url.href:''}catch{return ''}};
 const foodStorageKey='hawaii-itinerary-tried-foods';
 const savedFoods=()=>{try{return JSON.parse(localStorage.getItem(foodStorageKey)||'{}')}catch{return {}}};
+const toneFor=value=>[...String(value).toLowerCase()].reduce((total,char)=>total+char.charCodeAt(0),0)%6;
+const heroStats=document.querySelector('#hero-stats');
+const foodProgress=document.querySelector('#food-progress');
+const skeleton=rows=>`<div class="skeleton">${'<div class="skeleton-row"></div>'.repeat(rows)}</div>`;
+daysRoot.innerHTML=skeleton(3);
+foodRoot.innerHTML=skeleton(4);
+
+document.documentElement.classList.add('js-reveal');
+const revealObserver=window.IntersectionObserver&&new IntersectionObserver((entries,observer)=>entries.forEach(entry=>{if(!entry.isIntersecting)return;entry.target.classList.add('is-visible');observer.unobserve(entry.target)}),{rootMargin:'0px 0px -6%'});
+const reveal=(root,selector)=>root.querySelectorAll(selector).forEach((node,index)=>{node.classList.add('reveal');node.style.setProperty('--i',index%4);if(revealObserver&&!root.closest('.view-panel').hidden)revealObserver.observe(node);else node.classList.add('is-visible')});
+const revealNow=panel=>requestAnimationFrame(()=>panel.querySelectorAll('.reveal:not(.is-visible)').forEach(node=>node.classList.add('is-visible')));
 
 document.querySelectorAll('.view-tab').forEach(button=>button.addEventListener('click',()=>{
   const view=button.dataset.view;
   document.querySelectorAll('.view-tab').forEach(tab=>{const active=tab===button;tab.classList.toggle('is-active',active);tab.setAttribute('aria-selected',active)});
   document.querySelector('#itinerary-panel').hidden=view!=='itinerary';
   document.querySelector('#food-panel').hidden=view!=='food';
+  revealNow(document.querySelector(view==='food'?'#food-panel':'#itinerary-panel'));
 }));
 
 function loadItinerary(response){
@@ -33,6 +45,9 @@ function loadItinerary(response){
     const bubbles=dayEvents.filter(item=>item.event).map((item,index)=>{const hasMore=Boolean(item.description||item.image);const panelId=`event-${day.replace(/\D/g,'')}-${index}-details`;const content=`<div class="bubble-picture" aria-hidden="true"><span>${esc(item.emoji)||'📌'}</span></div><div class="bubble-copy"><div class="bubble-topline"><time>${esc(item.time)}</time></div><h4>${esc(item.event)}</h4>${item.details?`<p>${esc(item.details)}</p>`:''}</div>${hasMore?'<span class="expand-arrow" aria-hidden="true">⌄</span>':''}`;return `<article class="event-bubble${hasMore?' has-more':''}" data-emoji="${esc(item.emoji)}">${hasMore?`<button class="event-summary" type="button" aria-expanded="false" aria-controls="${panelId}">${content}</button><div class="event-extra" id="${panelId}" hidden>${item.image?`<img src="${esc(item.image)}" alt="${esc(item.event)}" loading="lazy">`:''}${item.description?`<p>${esc(item.description)}</p>`:''}</div>`:`<div class="event-summary">${content}</div>`}</article>`}).join('');
     return `<article class="day"><header><p class="day-number">${esc(day)}</p><h3 class="day-date">${esc(info.date)}</h3>${info.hotel?`<p class="day-hotel">🏨 ${esc(info.hotel)}</p>`:''}</header><div class="chronological-list">${bubbles||`<p class="no-events">${copy.empty}</p>`}</div></article>`;
   }).join('');
+  heroStats.innerHTML=`<li><b>${Object.keys(grouped).length}</b> ${copy.days}</li><li><b>${events.filter(item=>item.event).length}</b> ${copy.stops}</li>`;
+  heroStats.hidden=false;
+  reveal(daysRoot,'.day');
 }
 
 daysRoot.addEventListener('click',event=>{
@@ -51,7 +66,18 @@ function loadFood(response){
   const rows=response.table.rows.map(row=>row.c.map(cellText));
   const foods=rows[0]?.[1]?.toLowerCase()==='dish'?rows.slice(1):rows;
   const saved=savedFoods();
-  foodRoot.innerHTML=foods.filter(row=>row[1]).map(([category,dish,place,area,notes,tried,categoryPt,dishPt,placePt,areaPt,notesPt])=>{const id=[category,dish,place,area].join('|').toLowerCase();if(isPt){category=categoryPt||category;dish=dishPt||dish;place=placePt||place;area=areaPt||area;notes=notesPt||notes}const checked=id in saved?saved[id]:String(tried).toUpperCase()==='TRUE';return `<article class="food-card ${checked?'is-tried':''}" data-food-id="${esc(id)}"><button class="tried-toggle" type="button" aria-pressed="${checked}" aria-label="${checked?copy.markNotTried:copy.markTried}: ${esc(dish)}"><span aria-hidden="true">${checked?'✓':''}</span>${checked?copy.tried:copy.tryIt}</button><p class="food-category">${esc(category)}</p><h3>${esc(dish)}</h3>${place||area?`<p class="food-meta">${esc([place,area].filter(Boolean).join(' · '))}</p>`:''}${notes?`<p class="food-notes">${esc(notes)}</p>`:''}</article>`}).join('');
+  foodRoot.innerHTML=foods.filter(row=>row[1]).map(([category,dish,place,area,notes,tried,categoryPt,dishPt,placePt,areaPt,notesPt])=>{const id=[category,dish,place,area].join('|').toLowerCase();if(isPt){category=categoryPt||category;dish=dishPt||dish;place=placePt||place;area=areaPt||area;notes=notesPt||notes}const checked=id in saved?saved[id]:String(tried).toUpperCase()==='TRUE';return `<article class="food-card ${checked?'is-tried':''}" data-tone="${toneFor(category)}" data-food-id="${esc(id)}"><button class="tried-toggle" type="button" aria-pressed="${checked}" aria-label="${checked?copy.markNotTried:copy.markTried}: ${esc(dish)}"><span aria-hidden="true">${checked?'✓':''}</span>${checked?copy.tried:copy.tryIt}</button><p class="food-category">${esc(category)}</p><h3>${esc(dish)}</h3>${place||area?`<p class="food-meta">${esc([place,area].filter(Boolean).join(' · '))}</p>`:''}${notes?`<p class="food-notes">${esc(notes)}</p>`:''}</article>`}).join('');
+  reveal(foodRoot,'.food-card');
+  updateFoodProgress();
+}
+
+function updateFoodProgress(){
+  const cards=[...foodRoot.querySelectorAll('.food-card')];
+  foodProgress.hidden=!cards.length;
+  if(!cards.length)return;
+  const done=cards.filter(card=>card.classList.contains('is-tried')).length;
+  foodProgress.querySelector('.food-progress-label').innerHTML=`<b>${done}</b> ${copy.of} ${cards.length} ${copy.triedCount}`;
+  foodProgress.querySelector('.food-progress-fill').style.width=`${Math.round(done/cards.length*100)}%`;
 }
 
 foodRoot.addEventListener('click',event=>{
@@ -66,6 +92,7 @@ foodRoot.addEventListener('click',event=>{
   button.setAttribute('aria-pressed',checked);
   button.setAttribute('aria-label',`${checked?copy.markNotTried:copy.markTried}: ${card.querySelector('h3').textContent}`);
   button.innerHTML=`<span aria-hidden="true">${checked?'✓':''}</span>${checked?copy.tried:copy.tryIt}`;
+  updateFoodProgress();
 });
 
 function localizeDate(value){const days={Sun:'Dom',Mon:'Seg',Tue:'Ter',Wed:'Qua',Thu:'Qui',Fri:'Sex',Sat:'Sáb'};const months={Jan:'jan',Feb:'fev',Mar:'mar',Apr:'abr',May:'mai',Jun:'jun',Jul:'jul',Aug:'ago',Sep:'set',Oct:'out',Nov:'nov',Dec:'dez'};return String(value).replace(/^(Sun|Mon|Tue|Wed|Thu|Fri|Sat) • (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d+)$/,(_,day,month,date)=>`${days[day]} • ${date} ${months[month]}`)}

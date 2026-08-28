@@ -1,7 +1,14 @@
 .tried-badge{display:none}
-.tried-toggle{position:absolute;z-index:2;top:18px;right:18px;display:flex;align-items:center;gap:6px;padding:7px 11px;border:1px solid rgba(7,59,76,.15);border-radius:999px;background:#fff;color:var(--muted);font:700 .73rem "DM Sans",sans-serif;cursor:pointer}
-.tried-toggle span{display:grid;place-items:center;width:17px;height:17px;border:2px solid #87a8a2;border-radius:50%;font-size:.7rem}
-.food-card.is-tried{background:#effbf3;border-color:rgba(22,140,90,.28)}
-.food-card.is-tried .tried-toggle{background:#d9f6e5;color:#09633e;border-color:#9edbbb}
+.tried-toggle{position:absolute;z-index:2;top:20px;right:20px;display:flex;align-items:center;gap:7px;padding:7px 13px 7px 8px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink-soft);font:700 .72rem "DM Sans",sans-serif;cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease,transform .2s ease}
+.tried-toggle:hover{transform:scale(1.04);border-color:color-mix(in srgb,var(--leaf) 45%,transparent);color:var(--leaf)}
+.tried-toggle span{display:grid;place-items:center;width:18px;height:18px;border:2px solid color-mix(in srgb,var(--ink) 28%,transparent);border-radius:50%;font-size:.68rem;transition:background .2s ease,border-color .2s ease,color .2s ease}
+.food-card.is-tried{background:color-mix(in srgb,var(--leaf) 7%,var(--surface));border-color:color-mix(in srgb,var(--leaf) 28%,transparent)}
+.food-card.is-tried .tried-toggle{background:color-mix(in srgb,var(--leaf) 16%,var(--mix-bg));border-color:color-mix(in srgb,var(--leaf) 40%,transparent);color:var(--leaf)}
 .food-card.is-tried .tried-toggle span{border-color:var(--leaf);background:var(--leaf);color:#fff}
-.food-card.is-tried h3{text-decoration:line-through;text-decoration-color:rgba(22,140,90,.45);text-decoration-thickness:2px}
+.food-card.is-tried h3{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--leaf) 55%,transparent);text-decoration-thickness:2px}
+
+.food-progress{min-width:210px;padding-bottom:6px}
+.food-progress-label{margin:0 0 9px;color:var(--ink-soft);font-size:.8rem;font-weight:600;letter-spacing:.02em}
+.food-progress-label b{color:var(--leaf);font-size:1.05rem}
+.food-progress-track{height:8px;overflow:hidden;border-radius:999px;background:color-mix(in srgb,var(--ink) 9%,transparent)}
+.food-progress-fill{display:block;width:0;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--leaf),var(--aqua));transition:width .5s cubic-bezier(.22,.7,.3,1)}

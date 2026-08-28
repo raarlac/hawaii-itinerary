@@ -1,1 +1,2 @@
-.expand-arrow,.event-bubble.is-expanded .expand-arrow{transform:none;transition:none}
+.expand-arrow{transform:none}
+.event-bubble.is-expanded .expand-arrow{background:var(--event-color);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--event-color) 40%,transparent)}
