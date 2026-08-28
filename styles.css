@@ -15,13 +15,8 @@ body{margin:0;color:var(--ink);background:linear-gradient(180deg,var(--sand) 0%,
 .hero-shimmer{position:absolute;z-index:-1;inset:0;background:radial-gradient(30% 5% at 66% 50%,rgba(255,242,220,.2),transparent 75%),radial-gradient(24% 4% at 33% 68%,rgba(255,242,220,.13),transparent 75%),radial-gradient(18% 3% at 84% 64%,rgba(255,242,220,.16),transparent 75%)}
 .hero-wave{position:absolute;right:0;bottom:-1px;left:0;width:100%;height:clamp(56px,7.5vw,104px);color:var(--sand)}
 .hero-inner{width:min(1120px,calc(100% - 40px));margin:0 auto}
-.brand{display:inline-flex;align-items:center;gap:9px;margin:0 0 18px;padding:8px 16px 8px 13px;border:1px solid rgba(255,255,255,.34);border-radius:999px;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);font-size:.74rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase}
-.brand:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--sun);box-shadow:0 0 0 4px rgba(255,194,71,.28)}
-.hero h1{margin:0;font:700 clamp(3.6rem,11vw,8rem)/.9 "Fraunces",Georgia,serif;letter-spacing:-.02em;text-shadow:0 6px 30px rgba(4,40,52,.35)}
-.hero-place{margin:18px 0 0;max-width:22ch;font-size:clamp(1rem,1.6vw,1.18rem);font-weight:500;color:#eafffb;text-shadow:0 2px 12px rgba(4,40,52,.35)}
-.hero-stats{display:flex;flex-wrap:wrap;gap:9px;margin:26px 0 0;padding:0;list-style:none}
-.hero-stats li{display:flex;align-items:baseline;gap:7px;padding:9px 15px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:rgba(4,42,54,.22);backdrop-filter:blur(8px);font-size:.82rem;font-weight:600;color:#eafffb}
-.hero-stats b{font:700 1.05rem "Fraunces",Georgia,serif;color:#fff}
+.hero h1{margin:0;font:700 clamp(4rem,12vw,8.5rem)/.9 "Fraunces",Georgia,serif;letter-spacing:-.03em;text-shadow:0 6px 30px rgba(4,40,52,.35)}
+.hero-place{margin:20px 0 0 4px;font-size:clamp(.9rem,1.4vw,1.06rem);font-weight:600;letter-spacing:.34em;text-transform:uppercase;color:#eafffb;text-shadow:0 2px 12px rgba(4,40,52,.35)}
 
 main{width:min(1120px,calc(100% - 40px));margin:clamp(38px,6vw,64px) auto 0}
 .view-tabs{position:sticky;z-index:5;top:14px;display:flex;gap:6px;width:max-content;margin-bottom:clamp(34px,5vw,54px);padding:6px;border:1px solid var(--line);border-radius:999px;background:var(--surface);box-shadow:var(--shadow-md)}
@@ -29,9 +24,6 @@ main{width:min(1120px,calc(100% - 40px));margin:clamp(38px,6vw,64px) auto 0}
 .view-tab:hover{color:var(--deep);background:color-mix(in srgb,var(--aqua) 16%,transparent)}
 .view-tab.is-active{background:linear-gradient(135deg,#0f8b98,#0a6373);color:#fff;box-shadow:0 8px 20px rgba(10,99,115,.28)}
 .view-panel{padding-bottom:clamp(60px,9vw,110px)}
-.section-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:28px;margin-bottom:clamp(26px,4vw,40px)}
-.section-heading h2{position:relative;margin:0;padding-bottom:14px;font:700 clamp(2.4rem,6vw,4.4rem)/1 "Fraunces",Georgia,serif;letter-spacing:-.02em;color:var(--deep)}
-.section-heading h2:after{content:"";position:absolute;bottom:0;left:0;width:96px;height:5px;border-radius:5px;background:linear-gradient(90deg,var(--coral),var(--sun))}
 
 .days{display:grid;gap:clamp(18px,2.4vw,28px)}
 .day{--accent:var(--ocean);--accent-2:var(--aqua);position:relative;display:grid;grid-template-columns:200px minmax(0,1fr);gap:clamp(20px,3vw,38px);padding:clamp(24px,3vw,34px);border:1px solid var(--line);border-radius:var(--radius-lg);background:color-mix(in srgb,var(--surface) 86%,transparent);backdrop-filter:blur(6px);box-shadow:var(--shadow-md);transition:box-shadow .3s ease,border-color .3s ease}
@@ -90,11 +82,8 @@ footer span{position:relative}
   .hero{min-height:clamp(320px,62vh,440px)}
   .hero{--sun-right:8%;--sun-size:clamp(130px,32vw,180px)}
   .hero-sun{top:16%}
-  .hero-place{max-width:none}
   .view-tabs{width:100%;justify-content:center}
   .view-tab{flex:1;padding:12px 10px;text-align:center}
-  .section-heading{display:block}
-  .food-progress{margin-top:20px}
   .food-grid{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){
@@ -107,7 +96,7 @@ footer span{position:relative}
   body:before{background:radial-gradient(60rem 40rem at 6% 12%,rgba(255,194,71,.1),transparent 65%),radial-gradient(52rem 40rem at 98% 42%,rgba(62,207,198,.12),transparent 62%)}
   .hero-sky{background:linear-gradient(180deg,#020f18 0%,#052b3a 36%,#075464 58%,#12808a 76%,#d98a55 100%)}
   .view-tab.is-active{background:linear-gradient(135deg,#1aa6b0,#0d6d7c)}
-  .day-date,.food-card h3,.section-heading h2{color:var(--ink)}
+  .day-date,.food-card h3{color:var(--ink)}
   .error{background:#4a1f18;color:#ffd9d0}
   footer{background:linear-gradient(160deg,#04202a,#07414f)}
 }

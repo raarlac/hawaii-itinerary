@@ -24,10 +24,8 @@
       <span class="hero-shimmer"></span>
     </div>
     <div class="hero-inner">
-      <p class="brand" data-i18n="brand">Hawaii</p>
-      <h1>Sep 2–8</h1>
-      <p class="hero-place">Oʻahu · Waikīkī + Ko Olina</p>
-      <ul class="hero-stats" id="hero-stats" hidden></ul>
+      <h1>Hawaii</h1>
+      <p class="hero-place">Oʻahu</p>
     </div>
     <svg class="hero-wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
       <path d="M0 52c140-34 260-40 380-16s250 62 370 58 230-52 350-64 210 2 340 20v82H0z" fill="currentColor" opacity=".38"></path>
@@ -36,20 +34,16 @@
   </header>
   <main>
     <div class="view-tabs" role="tablist" aria-label="Trip views">
-      <button class="view-tab is-active" role="tab" aria-selected="true" aria-controls="itinerary-panel" data-view="itinerary" data-i18n="itinerary">Itinerary</button>
-      <button class="view-tab" role="tab" aria-selected="false" aria-controls="food-panel" data-view="food" data-i18n="food">Things to eat</button>
+      <button class="view-tab is-active" id="tab-itinerary" role="tab" aria-selected="true" aria-controls="itinerary-panel" data-view="itinerary" data-i18n="itinerary">Itinerary</button>
+      <button class="view-tab" id="tab-food" role="tab" aria-selected="false" aria-controls="food-panel" data-view="food" data-i18n="food">Things to eat</button>
     </div>
-    <section class="view-panel" id="itinerary-panel" role="tabpanel">
-      <div class="section-heading"><h2 data-i18n="plan">The island plan</h2></div>
+    <section class="view-panel" id="itinerary-panel" role="tabpanel" aria-labelledby="tab-itinerary">
       <div class="days" id="days" aria-live="polite"></div>
     </section>
-    <section class="view-panel" id="food-panel" role="tabpanel" hidden>
-      <div class="section-heading">
-        <h2 data-i18n="food">Things to eat</h2>
-        <div class="food-progress" id="food-progress" hidden>
-          <p class="food-progress-label"></p>
-          <div class="food-progress-track"><span class="food-progress-fill"></span></div>
-        </div>
+    <section class="view-panel" id="food-panel" role="tabpanel" aria-labelledby="tab-food" hidden>
+      <div class="food-progress" id="food-progress" hidden>
+        <p class="food-progress-label"></p>
+        <div class="food-progress-track"><span class="food-progress-fill"></span></div>
       </div>
       <div class="food-grid" id="food-list" aria-live="polite"></div>
     </section>

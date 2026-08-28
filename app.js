@@ -1,20 +1,18 @@
 const daysRoot=document.querySelector('#days');
 const foodRoot=document.querySelector('#food-list');
 const isPt=(navigator.languages||[navigator.language]).some(language=>/^pt(?:-|$)/i.test(language));
-const copy=isPt?{brand:'Hawaii',itinerary:'Roteiro',food:'O que comer',plan:'O roteiro da ilha',footer:'Feito para dias de ilha 🌺',loadItinerary:'Não foi possível carregar o roteiro.',loadFood:'Não foi possível carregar a lista de comidas.',empty:'Nenhum evento programado.',tried:'Já comi',tryIt:'Quero provar',markTried:'Marcar como provado',markNotTried:'Marcar como não provado',days:'dias',stops:'paradas',of:'de',triedCount:'provados'}:{brand:'Hawaii',itinerary:'Itinerary',food:'Things to eat',plan:'The island plan',footer:'Made for island days 🌺',loadItinerary:'Could not load the itinerary.',loadFood:'Could not load the food list.',empty:'No scheduled events yet.',tried:'Tried',tryIt:'Try it',markTried:'Mark as tried',markNotTried:'Mark as not tried',days:'days',stops:'stops',of:'of',triedCount:'tried'};
+const copy=isPt?{itinerary:'Roteiro',food:'O que comer',footer:'Feito para dias de ilha 🌺',loadItinerary:'Não foi possível carregar o roteiro.',loadFood:'Não foi possível carregar a lista de comidas.',empty:'Nenhum evento programado.',tried:'Já comi',tryIt:'Quero provar',markTried:'Marcar como provado',markNotTried:'Marcar como não provado',of:'de',triedCount:'provados'}:{itinerary:'Itinerary',food:'Things to eat',footer:'Made for island days 🌺',loadItinerary:'Could not load the itinerary.',loadFood:'Could not load the food list.',empty:'No scheduled events yet.',tried:'Tried',tryIt:'Try it',markTried:'Mark as tried',markNotTried:'Mark as not tried',of:'of',triedCount:'tried'};
 document.documentElement.lang=isPt?'pt-BR':'en';
 document.title=isPt?'Roteiro do Havaí':'Hawaii Itinerary';
 document.querySelector('meta[name="description"]').content=isPt?'Um roteiro pelo Havaí para Waikīkī e Ko Olina.':'A Hawaii itinerary for Waikīkī and Ko Olina.';
 document.querySelectorAll('[data-i18n]').forEach(node=>node.textContent=copy[node.dataset.i18n]);
 document.querySelector('.view-tabs').setAttribute('aria-label',isPt?'Seções da viagem':'Trip views');
-document.querySelector('.hero h1').textContent=isPt?'2–8 set':'Sep 2–8';
 const cellText=cell=>cell&&(cell.f??cell.v)!=null?String(cell.f??cell.v):'';
 const esc=value=>String(value).replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 const safeImageUrl=value=>{try{const url=new URL(String(value));return url.protocol==='https:'?url.href:''}catch{return ''}};
 const foodStorageKey='hawaii-itinerary-tried-foods';
 const savedFoods=()=>{try{return JSON.parse(localStorage.getItem(foodStorageKey)||'{}')}catch{return {}}};
 const toneFor=value=>[...String(value).toLowerCase()].reduce((total,char)=>total+char.charCodeAt(0),0)%6;
-const heroStats=document.querySelector('#hero-stats');
 const foodProgress=document.querySelector('#food-progress');
 const skeleton=rows=>`<div class="skeleton">${'<div class="skeleton-row"></div>'.repeat(rows)}</div>`;
 daysRoot.innerHTML=skeleton(3);
@@ -45,8 +43,6 @@ function loadItinerary(response){
     const bubbles=dayEvents.filter(item=>item.event).map((item,index)=>{const hasMore=Boolean(item.description||item.image);const panelId=`event-${day.replace(/\D/g,'')}-${index}-details`;const content=`<div class="bubble-picture" aria-hidden="true"><span>${esc(item.emoji)||'📌'}</span></div><div class="bubble-copy"><div class="bubble-topline"><time>${esc(item.time)}</time></div><h4>${esc(item.event)}</h4>${item.details?`<p>${esc(item.details)}</p>`:''}</div>${hasMore?'<span class="expand-arrow" aria-hidden="true">⌄</span>':''}`;return `<article class="event-bubble${hasMore?' has-more':''}" data-emoji="${esc(item.emoji)}">${hasMore?`<button class="event-summary" type="button" aria-expanded="false" aria-controls="${panelId}">${content}</button><div class="event-extra" id="${panelId}" hidden>${item.image?`<img src="${esc(item.image)}" alt="${esc(item.event)}" loading="lazy">`:''}${item.description?`<p>${esc(item.description)}</p>`:''}</div>`:`<div class="event-summary">${content}</div>`}</article>`}).join('');
     return `<article class="day"><header><p class="day-number">${esc(day)}</p><h3 class="day-date">${esc(info.date)}</h3>${info.hotel?`<p class="day-hotel">🏨 ${esc(info.hotel)}</p>`:''}</header><div class="chronological-list">${bubbles||`<p class="no-events">${copy.empty}</p>`}</div></article>`;
   }).join('');
-  heroStats.innerHTML=`<li><b>${Object.keys(grouped).length}</b> ${copy.days}</li><li><b>${events.filter(item=>item.event).length}</b> ${copy.stops}</li>`;
-  heroStats.hidden=false;
   reveal(daysRoot,'.day');
 }
 
