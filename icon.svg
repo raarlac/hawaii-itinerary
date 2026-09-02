@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Sunset over the ocean">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#04303f"/>
+      <stop offset=".26" stop-color="#065465"/>
+      <stop offset=".5" stop-color="#0a7c8c"/>
+      <stop offset=".7" stop-color="#159fa2"/>
+      <stop offset=".88" stop-color="#3cb8ac"/>
+      <stop offset="1" stop-color="#68cbb5"/>
+    </linearGradient>
+    <radialGradient id="sun" cx=".5" cy=".44" r=".56">
+      <stop offset="0" stop-color="#fffaea"/>
+      <stop offset=".38" stop-color="#ffe6a2"/>
+      <stop offset=".7" stop-color="#ffc06d"/>
+      <stop offset="1" stop-color="#ff9f57"/>
+    </radialGradient>
+    <radialGradient id="glow" cx=".5" cy=".5" r=".5">
+      <stop offset=".42" stop-color="#ffc98a" stop-opacity=".6"/>
+      <stop offset="1" stop-color="#ffc98a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#sky)"/>
+  <circle cx="256" cy="202" r="205" fill="url(#glow)"/>
+  <circle cx="256" cy="202" r="112" fill="url(#sun)"/>
+  <g transform="translate(0 424) scale(.355556 .733333)">
+    <path d="M0 52c140-34 260-40 380-16s250 62 370 58 230-52 350-64 210 2 340 20v82H0z" fill="#fff8ef" opacity=".38"/>
+    <path d="M0 78c120-30 240-45 360-30s240 60 360 60 240-45 360-60 240-6 360 12v62H0z" fill="#fff8ef"/>
+  </g>
+</svg>
